@@ -31,7 +31,7 @@ class Game {
         this.player.draw();
         if (frameCount % 360 === 0) {
             this.trunks.push(new Trunk(this.trunkImage));
-            // this.coins.push(new Coin(this.coinImage));
+            this.coins.push(new Coin(this.coinImage));
         }
         this.trunks.forEach((trunk) => {
             trunk.draw();

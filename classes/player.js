@@ -32,21 +32,24 @@ class Player {
         let xc = constrain(this.x, 0, width - this.width);
         let yc = constrain(this.y, 0, height - this.height);
 
+        // if (this.x > trunk.x && this.x < trunk.x + trunk.width) {
+        //     yc = constrain(this.y, 0, game.trunk.y - this.height);
+        // }
         game.trunks.forEach((trunk) => {
             if (
-                yc - this.height > trunk.y &&
+                yc <= trunk.y - this.height &&
                 xc > trunk.x - this.width &&
                 xc < trunk.x + trunk.width
             ) {
                 console.log(
                     'higher than trunk',
-                    this.y >= height - this.height - trunk.y
+                    this.y <= trunk.y - this.height
                 );
                 console.log(
                     'in the trunk width',
                     this.x > trunk.x && this.x < trunk.x + trunk.width
                 );
-                yc = height - this.height - trunk.y;
+                yc = trunk.y - this.height - 5;
             }
         });
 
