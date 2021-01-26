@@ -29,8 +29,13 @@ class Player {
         this.velocity += this.gravity;
         // this pushes the player down => gravity
         this.y += this.velocity;
-        if (this.overObstacle && (this.y - this.height) < (this.overObstacle.y + this.overObstacle.height)) {
-            this.y = this.overObstacle.y - this.height - 5;
+        if (this.overObstacle && this.y >= this.overObstacle.y - this.height) {
+            // if (this.y >= (this.overObstacle.y + this.height)) {
+            this.y = this.overObstacle.y - this.height;
+            // this.jumping = false
+            // }
+            // this.y = this.overObstacle.y - this.height - 5;
+
             // if (this.y >= this.overObstacle.y + this.height) {
             //     console.log('now');
             //     // this.y = this.height - this.overObstacle.y + this.overObstacle.height
