@@ -2,6 +2,7 @@ class Game {
     constructor() {
         this.backgroundImages;
         this.trunkImage;
+        this.coinImage;
     }
     preload() {
         this.backgroundImages = [
@@ -13,24 +14,41 @@ class Game {
         ];
         this.grassImage = loadImage('assets/background/jungle-grass.png');
         this.playerImage = loadImage('assets/player/playerImg.png');
-        this.trunkImage = loadImage('assets/trunks-obstacles/tree-trunk.png');
+        this.trunkImage = {
+            src: loadImage('assets/objects/liana.png'),
+        };
+        this.coinImage = loadImage('assets/objects/coin.png');
     }
     setup() {
         this.player = new Player();
         this.background = new Background();
         this.trunks = [];
+        this.coins = [];
     }
     draw() {
         clear();
-        // this.trunk.draw();
         this.background.draw();
         this.player.draw();
-        if (frameCount % 180 === 0) {
+        if (frameCount % 360 === 0) {
             this.trunks.push(new Trunk(this.trunkImage));
-            console.log(this.trunks);
+            // this.coins.push(new Coin(this.coinImage));
         }
         this.trunks.forEach((trunk) => {
             trunk.draw();
+        });
+        this.coins.forEach((coin) => {
+            coin.draw();
+        });
+
+        // remove coins
+        this.coins = this.coins.filter((coin) => {
+            // we have to use an arrow function bc of the correct context of 'this'
+            // obstacle.collision(this.player)
+            if (coin.collision(this.player) || coin.x < 0) {
+                return false;
+            } else {
+                return true;
+            }
         });
     }
 }
