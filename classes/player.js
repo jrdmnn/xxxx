@@ -10,6 +10,9 @@ class Player {
         this.ground = height - this.height - height / 6
         this.jumping;
         this.overObstacle = false;
+        // ******************
+        this.underObstacle = false;
+        // ******************
     }
     jump() {
         if (!this.jumping) {
@@ -24,63 +27,53 @@ class Player {
         this.x -= 25;
     }
     draw() {
-        // console.log(this.overObstacle);
         // this gets higher with every loop
         this.velocity += this.gravity;
         // this pushes the player down => gravity
         this.y += this.velocity;
-        if (this.overObstacle && this.y >= this.overObstacle.y - this.height) {
-            // if (this.y >= (this.overObstacle.y + this.height)) {
-            this.y = this.overObstacle.y - this.height;
-            // this.jumping = false
-            // }
-            // this.y = this.overObstacle.y - this.height - 5;
 
-            // if (this.y >= this.overObstacle.y + this.height) {
-            //     console.log('now');
-            //     // this.y = this.height - this.overObstacle.y + this.overObstacle.height
-            // }
-            // console.log('over');
-            // this.gravity = 0.2
-            // this.y = this.height - this.overObstacle.y + this.overObstacle.height
-            // this.y = this.overObstacle.y - this.height - 5;
+        // **********************
+        // this makes sure the player does not go through the trunk when under the trunk and jumping
+        if (this.underObstacle && this.y <= (this.underObstacle.y + this.underObstacle.height) && this.jumping) {
+            this.y = this.underObstacle.y + this.underObstacle.height;
+            this.velocity = 1;
+        }
+        // **********************
+
+        // **********************
+        // also add !this.underObstacle here: 
+        if (!this.underObstacle && this.overObstacle && this.y >= this.overObstacle.y - this.height) {
+            this.y = this.overObstacle.y - this.height;
         }
         // this makes sure that player does not move out of the bottom of the screen
         if (this.y >= height - this.height - height / 6) {
-            // this.gravity = 0.2;
-            // this is the starting y of the player
             this.y = this.ground;
             this.jumping = false;
         }
 
-        // let xc = constrain(this.x, 0, width - this.width);
-        // let yc = constrain(this.y, 0, height - this.height);
-
-        // if (this.x > trunk.x && this.x < trunk.x + trunk.width) {
-        //     yc = constrain(this.y, 0, game.trunk.y - this.height);
-        // }
         game.trunks.forEach((trunk) => {
-            // console.log(trunk.y);
+            // condition for if the player is above the obstacle
             if (
-                // condition for 'player is above the obstacle
                 (this.x + this.width) >= trunk.x && this.x <= (trunk.x + trunk.width)
                 && (this.y - this.height) < (trunk.y + trunk.height)
-                // and 
             ) {
-                // this.y = trunk.y - this.height - 5;
-                // this.ground = trunk.y + trunk.height + this.height
                 this.overObstacle = trunk;
 
-                // console.log(this.ground);
             } else {
-                // this.ground = height - this.height - height / 6;
                 this.overObstacle = false
             }
+
+            // **********************
+            // condition for if the player is under the obstacle
+            if ((this.x + this.width) >= trunk.x && this.x <= (trunk.x + trunk.width) &&
+                this.y > (trunk.y - trunk.height)) {
+                this.underObstacle = trunk;
+            } else {
+                this.underObstacle = false;
+            }
+            // **********************
         });
 
-        // if (this.y < 1) {
-        //     this.gravity *= 1.5;
-        // }
 
         image(game.playerImage, this.x, this.y, this.width, this.height);
     }
